@@ -1,4 +1,5 @@
 from fastapi import APIRouter, status, HTTPException
+from product.routers.login import get_current_user
 from sqlalchemy.orm import Session
 from fastapi.params import Depends
 from ..database import get_db
@@ -19,7 +20,7 @@ def addProduct(product:schemas.Product, db: Session = Depends(get_db)):
   return new_product
 
 @router.get('/', response_model = List[schemas.DisplayProduct])
-def getAllProducts(db: Session = Depends(get_db)):
+def getAllProducts(db: Session = Depends(get_db), current_user: schemas.Seller = Depends(get_current_user)):
   products = db.query(models.Product).all()
   return products
 
